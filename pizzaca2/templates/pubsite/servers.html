@@ -1,0 +1,70 @@
+{% extends 'lievito/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}Pizza CA{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">	
+		<form role="form" method="GET" action="">
+			<div class="input-group">                               
+                <input type="text" class="form-control" placeholder="Search" id="search" name="q" value="{{ query }}">
+				<span class="input-group-btn">
+					<button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span></button>
+				</span>
+            </div>
+		</form>
+    </div>                  
+</div> 
+<div class="row">
+	<div class="col-md-12">
+	<p>&nbsp;</p>
+	</div>
+</div>
+{% for srv in objects_page %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel {% if srv.status == 'active' %}panel-info{% else %}panel-danger{% endif %}">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="glyphicon glyphicon-certificate"></i>
+				 {{ srv.CN }}
+  			</div>
+  			<div class="panel-body">
+  				<div class="subtitle">
+    				<h3>Subject</h3>
+    			</div>
+                <div class="data">
+                    Common name: <strong>{{ srv.CN }}</strong><br/>
+                    Organization: <strong>{{ srv.O }}</strong><br/>
+        			Organizational unit: <strong>{{ srv.OU }}</strong><br/>
+                    Locality name: <strong>{{ srv.L }}</strong><br/>
+                    State or Province name: <strong>{{ srv.ST }}</strong><br/>
+        			Country: <strong>{{ srv.country }}</strong><br/>
+                </div>
+                <div class="subtitle">
+                    <h3>Validity</h3>
+                </div>
+                <div class="data">
+                    Not before: <strong>{{ srv.not_before|date:'l d F Y H:i:s e' }}</strong><br/>
+                    Not after: <strong>{{ srv.not_after|date:'l d F Y H:i:s e' }}</strong><br/>
+                    {% if srv.status == 'revoked' %}
+                    Revoked on: <strong>{{ srv.revoked_on|date:'l d F Y H:i:s e' }}</strong><br/>
+                    {% endif %}
+                </div>
+    			<hr/>
+    			<div class="row">
+    				<div class="col-md-6"><strong>{{ id.issuer }}</strong></div>
+    				<div class="col-md-2"></div>
+		  			<div class="col-md-4">
+		  				<div class="pull-right">
+		  					<a href="{% url 'calzone.views.download_srv_pem' srv.pk %}" type="button" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-download"></i> {% trans 'Download' %}</a>
+		  				</div>
+		  			</div>
+		  		</div>
+  			</div>
+		</div>
+	</div>
+</div>
+{% endfor %} 
+{% include 'lievito/paginator.html' %} 
+{% endblock %}

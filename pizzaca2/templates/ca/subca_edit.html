@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}Pizza CA{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<form role="form" action="" method="POST">
+			<input type="hidden" name="{{ f.id.html_name }}" value="{{ f.id.value }}">
+		{% csrf_token %}
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group {% if f.ca.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.ca.html_name }}"
+							class="control-label">{% trans 'Root CA' %}</label>
+						<select id="id_{{ f.ca.html_name }}" name="{{ f.ca.html_name }}" class="form-control">
+						{% for ca in f.ca.field.choices %}
+							<option value="{{ ca.0 }}" {% if ca.0|slugify == f.ca.value|slugify %} selected="selected"{% endif %}>{{ ca.0 }} - {{ ca.1 }}</option>
+						{% endfor %}
+						</select>
+						{% if f.ca.errors %}
+							{% for err in f.ca.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group {% if f.CN.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.CN.html_name }}"
+							class="control-label">{% trans 'Common Name' %}</label>
+						<input
+							type="text"
+							class="form-control"
+							id="id_{{ f.CN.html_name }}"
+							name="{{ f.CN.html_name }}"
+							value="{{ f.CN.value|default_if_none:'' }}"
+						/>
+						{% if f.CN.errors %}
+							{% for err in f.CN.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group {% if f.OU.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.OU.html_name }}"
+							class="control-label">{% trans 'Organizational Unit' %}</label>
+						<input
+							type="text"
+							class="form-control"
+							id="id_{{ f.OU.html_name }}"
+							name="{{ f.OU.html_name }}"
+							value="{{ f.OU.value|default_if_none:'' }}"
+						/>
+						{% if f.OU.errors %}
+							{% for err in f.OU.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group {% if f.kind.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.kind.html_name }}"
+							class="control-label">{% trans 'SubCA type' %}</label>
+						<select id="id_{{ f.kind.html_name }}" name="{{ f.kind.html_name }}" class="form-control">
+						{% for k in f.kind.field.choices %}
+							<option value="{{ k.0 }}" {% if k.0|slugify == f.kind.value %} selected="selected"{% endif %}>{{ k.1 }}</option>
+						{% endfor %}
+						</select>
+						{% if f.OU.errors %}
+							{% for err in f.OU.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<p>
+				<a href="{% url 'ca:subca_search' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
+				<button name="guardar" value="guardar" type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+			</p>
+		</form>
+	</div>
+</div>
+{% endblock %}

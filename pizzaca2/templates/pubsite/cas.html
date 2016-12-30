@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+	<p>&nbsp;</p>
+	</div>
+</div>
+{% for ca in objects_page %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<h3 class="panel-title"><i class="glyphicon glyphicon-certificate"></i>
+				 {{ ca.CN }}
+  			</div>
+  			<div class="panel-body">
+  				<div class="subtitle-info">
+    				<h3>Root CA</h3>
+    			</div>
+                <div class="data">
+                    Common name: <strong>{{ ca.CN }}</strong><br/>
+                    Organization: <strong>{{ ca.O }}</strong><br/>
+        			Organizational unit: <strong>{{ ca.OU }}</strong><br/>
+        			Country: <strong>{{ ca.get_C_display }}</strong><br/>
+        			Not before: <strong>{{ ca.not_before|date:'l d F Y H:i:s e' }}</strong><br/>
+                    Not after: <strong>{{ ca.not_after|date:'l d F Y H:i:s e' }}</strong><br/>
+                </div>
+    			{% if ca.sub_cas.all %}
+    			<div class="subtitle-info">
+    				<h3>{% trans 'Intermediates' %}</h3>
+    			</div>
+                <div class="data">
+        			<ul class="list-unstyled">
+        			{% for sub in ca.sub_cas.all %}
+        				<li>
+                            <h4>{{ sub.CN }}</h4>
+                            <ul>
+                                <li>Organizational unit: <strong>{{ sub.OU }}</strong></li>
+                                <li>Kind: <strong>{{ sub.get_kind_display }}</strong></li>
+                                <li>Not before: <strong>{{ sub.not_before|date:'l d F Y H:i:s e' }}</strong></li>
+                                <li>Not after: <strong>{{ sub.not_after|date:'l d F Y H:i:s e' }}</strong></li>
+                            </ul>
+                        </li>
+        			{% endfor %}
+        			</ul>
+                </div>
+    			{% endif %}
+    			<hr/>
+    			<div class="row">
+    				<div class="col-md-6"></div>
+    				<div class="col-md-2"></div>
+		  			<div class="col-md-4">
+		  				<div class="pull-right">
+		  					<a href="{% url 'acqua.views.bundle' ca.pk %}" type="button" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-download"></i> {% trans 'Get bundle' %}</a>
+		  				</div>
+		  			</div>
+		  		</div>
+  			</div>
+		</div>
+	</div>
+</div>
+{% endfor %}
+{% include 'paginator.html' %}
+{% endblock %}

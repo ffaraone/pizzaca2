@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}Pizza CA{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<form role="form" action="" method="POST">
+		{% csrf_token %}
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group {% if f.CN.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.CN.html_name }}"
+							class="control-label">{% trans 'Common Name' %}</label>
+						<input
+							type="text"
+							class="form-control"
+							id="id_{{ f.CN.html_name }}"
+							name="{{ f.CN.html_name }}"
+							value="{{ f.CN.value|default_if_none:'' }}"
+						/>
+						{% if f.CN.errors %}
+							{% for err in f.CN.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group {% if f.O.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.O.html_name }}"
+							class="control-label">{% trans 'Organization' %}</label>
+						<input
+							type="text"
+							class="form-control"
+							id="id_{{ f.O.html_name }}"
+							name="{{ f.O.html_name }}"
+							value="{{ f.O.value|default_if_none:'' }}"
+						/>
+						{% if f.O.errors %}
+							{% for err in f.O.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group {% if f.OU.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.OU.html_name }}"
+							class="control-label">{% trans 'Organizational Unit' %}</label>
+						<input
+							type="text"
+							class="form-control"
+							id="id_{{ f.OU.html_name }}"
+							name="{{ f.OU.html_name }}"
+							value="{{ f.OU.value|default_if_none:'' }}"
+						/>
+						{% if f.OU.errors %}
+							{% for err in f.OU.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="form-group {% if f.C.errors %}has-error{% endif %}">
+						<label
+							for="id_{{ f.C.html_name }}"
+							class="control-label">{% trans 'Country' %}</label>
+						<select
+							name="{{ f.C.html_name }}"
+							id="id_{{ f.C.html_name }}"
+							class="form-control">
+							{% for country in f.C.field.choices %}
+								<option value="{{ country.0 }}"{% if country.0 == f.C.value %} selected="selected" {% endif %}>{{ country.1 }}</option>
+							{% endfor %}
+						</select>
+						{% if f.C.errors %}
+							{% for err in f.C.errors %}
+								<span class="help-block">{{ err }}</span>
+							{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<p>
+				<a href="{% url 'ca:ca_search' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
+				<button name="guardar" value="guardar" type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+			</p>
+		</form>
+	</div>
+</div>
+{% endblock %}

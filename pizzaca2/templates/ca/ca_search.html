@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}Pizza CA{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <a  href="{% url 'ca:ca_create' %}" class="btn btn-primary" role="button">{% trans 'New CA' %}</a>
+    </div>
+    <div class="col-md-9">
+		<form role="form" method="GET" action="">
+			<div class="input-group">
+        <input type="text" class="form-control" placeholder="Search" id="search" name="q" value="{{ query }}">
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-secondary"><span class="fa fa-search"></span></button>
+				</span>
+
+      </div>
+		</form>
+    </div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+	<p>&nbsp;</p>
+	</div>
+</div>
+{% for ca in objects_page %}
+<div class="row">
+	<div class="col-md-12">
+		{% if ca.status == 'new' %}
+		<div class="card card-outline-secondary">
+      <h3 class="card-header"><i class="fa fa-file-o"></i>
+         {{ ca.CN }}</h3>
+    {% elif ca.status == 'active' %}
+    <div class="card card-outline-success">
+      <h3 class="card-header"><i class="fa fa-check-circle-o"></i>
+         {{ ca.CN }}</h3>
+    {% else %}
+    <div class="card card-outline-danger">
+      <h3 class="card-header"><i class="fa fa-flag-o"></i>
+         {{ ca.CN }}</h3>
+    {% endif %}
+			<div class="card-block">
+  			<p class="card-text">
+         {% trans 'Organization' %}: <strong>{{ ca.O }}</strong><br/>
+    			{% trans 'Organizational unit' %}: <strong>{{ ca.OU }}</strong><br/>
+    			{% trans 'Country' %}: <strong>{{ ca.country }}</strong><br/>
+        </p>
+        {% if ca.status == 'new' %}
+        <div class="pull-right">
+          <a href="#" role="button" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i> {% trans 'Delete' %}</a>
+          <a href="{% url 'ca:ca_update' ca.pk %}" role="button" class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i> {% trans 'Edit' %}</a>
+          <a href="{% url 'ca:ca_generate' ca.pk %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-cog"></i> {% trans 'Generate' %}</a>
+        </div>
+        {% endif %}
+      </div>
+		</div>
+	</div>
+</div>
+{% endfor %}
+{% include 'paginator.html' %}
+{% endblock %}

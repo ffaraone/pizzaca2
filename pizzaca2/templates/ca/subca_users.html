@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}Pizza CA{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<form role="form" action="" method="POST">
+			<input type="hidden" name="subca_id" value="{{ subca_id }}">
+		{% csrf_token %}
+			<div class="row">
+				<div class="col-md-4">
+					<h2>{{ subca_name }}<h2>
+				</div>
+				<div class="col-md-8">
+					<div class="form-group">
+						<label
+							for="id_operators"
+							class="control-label">{% trans 'Operators' %}</label>
+						<select id="id_operators" name="operators" class="form-control" multiple="multiple">
+						{% for o in operators %}
+							<option value="{{ o.pk }}" {% if o.pk in selected_operators %} selected="selected"{% endif %}>{{ o.first_name }} {{ o.last_name }} ({{ o.email }})</option>
+						{% endfor %}
+						</select>
+					</div>
+				</div>
+			</div>
+			<p>
+				<a href="{% url 'ca:subca_search' %}" class="btn btn-default">{% trans 'Cancel' %}</a>
+				<button name="guardar" value="guardar" type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+			</p>
+		</form>
+	</div>
+</div>
+{% endblock %}

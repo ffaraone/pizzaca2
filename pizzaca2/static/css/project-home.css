@@ -1,0 +1,62 @@
+body, html {
+  height: 100%;
+  width: 100%;
+}
+
+.navbar-brand {
+  line-height: 30px;
+}
+.navbar-nav li a {
+  line-height: 30px;
+}
+
+.intro-header {
+  color: #f8f8f8;
+  background: url(../images/pizzaca.jpg) no-repeat center center fixed;
+  background-size: cover;
+  text-align: center;
+    display: table;
+    height: 94%;
+    width: 100%;
+    position: relative;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.intro-message {
+  position: relative;
+  padding-top: 20%;
+  padding-bottom: 20%;
+}
+
+.intro-message > h1 {
+  margin: 0;
+  font-size: 5em;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+}
+
+.intro-divider {
+  width: 400px;
+  border-top: 1px solid #f8f8f8;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.intro-message > h3 {
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 767px) {
+  .intro-message {
+    padding-bottom: 15%;
+  }
+
+  .intro-message > h1 {
+    font-size: 3em;
+  }
+
+  .intro-divider {
+    width: 100%;
+  }
+}
