@@ -33,11 +33,11 @@
         <li class="nav-item dropdown">
           <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{% trans 'RA' %} <b class="caret"></b></a>
           <div class="dropdown-menu">
-            {% if perms.calzone.can_search_identity %}
-            <a class="dropdown-item" href="#">Identities</a>
+            {% if perms.certs.can_search_identity %}
+            <a class="dropdown-item" href="{% url 'certs:identity_search' %}">Identities</a>
             {% endif %}
-            {% if perms.calzone.can_search_server %}
-            <a class="dropdown-item" href="#">Servers</a>
+            {% if perms.certs.can_search_server %}
+            <a class="dropdown-item" href="{% url 'certs:server_search' %}">Servers</a>
             {% endif %}
           </div>
         </li>

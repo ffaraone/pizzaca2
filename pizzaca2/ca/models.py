@@ -74,7 +74,7 @@ class CA(models.Model):
         help_text=_('Current CA status')
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return 'CN={CN}, O={O}, OU={OU}, C={C}'.format(
             CN=self.CN,
             O=self.O,
@@ -123,6 +123,14 @@ class SubCA(models.Model):
         help_text=_('Not after')
     )
 
+    last_modified = models.DateTimeField(
+        blank=True,
+        null=True,
+        auto_now=True,
+        verbose_name=_('Last modified'),
+        help_text=_('Last modified')
+    )
+
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -138,5 +146,5 @@ class SubCA(models.Model):
 
     operators = models.ManyToManyField(User)
 
-    def __unicode__(self):
-        return unicode(self.CN)
+    def __str__(self):
+        return self.CN

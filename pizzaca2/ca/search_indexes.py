@@ -36,7 +36,7 @@ class SubCAIndex(indexes.ModelSearchIndex, indexes.Indexable):
         return obj.ca.O
 
     def prepare_ca(self, obj):
-        return unicode(obj.ca)
+        return str(obj.ca)
 
     def prepare_operators(self, obj):
         return [op.pk for op in obj.operators.all()]

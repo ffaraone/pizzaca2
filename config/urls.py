@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^users/', include('pizzaca2.users.urls', namespace='users')),
     url(r'^pubsite/', include('pizzaca2.pubsite.urls', namespace='pubsite')),
     url(r'^ca/', include('pizzaca2.ca.urls', namespace='ca')),
+    url(r'^certs/', include('pizzaca2.certs.urls', namespace='certs')),
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here

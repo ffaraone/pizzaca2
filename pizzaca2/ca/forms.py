@@ -12,4 +12,8 @@ class CAForm(ModelForm):
 class SubCAForm(ModelForm):
     class Meta:
         model = SubCA
-        exclude = ['status', 'operators']
+        exclude = ['status', 'operators', 'not_before', 'not_after']
+
+    def __init__(self, *args, **kwargs):
+        super(SubCAForm, self).__init__(*args, **kwargs)
+        self.fields['ca'].queryset = CA.objects.filter(status='active')

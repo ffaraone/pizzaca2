@@ -21,7 +21,7 @@ class IdentityIndex(indexes.ModelSearchIndex, indexes.Indexable):
         return [op.pk for op in obj.issuer.operators.all()]
 
     def prepare_issuer(self, obj):
-        return unicode(obj.issuer)
+        return str(obj.issuer)
 
     def prepare_country(self, obj):
         return obj.get_C_display()
@@ -48,7 +48,7 @@ class ServerIndex(indexes.ModelSearchIndex, indexes.Indexable):
         return [op.pk for op in obj.issuer.operators.all()]
 
     def prepare_issuer(self, obj):
-        return unicode(obj.issuer)
+        return str(obj.issuer)
 
     def prepare_country(self, obj):
         return obj.get_C_display()

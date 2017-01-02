@@ -191,7 +191,7 @@ def create_stdsub(pk, kind, rootpk, CN, O, OU, C):
 
 def get_sub_crt(pk):
     base_dir = os.path.join(settings.CA_ROOT, 'stdsub', str(pk))
-    with open(os.path.join(base_dir, 'ca', 'sub-ca.crt'), 'rb') as f:
+    with open(os.path.join(base_dir, 'ca', 'sub-ca.crt'), 'r') as f:
         return f.read()
 
 
@@ -265,7 +265,7 @@ def create_stdroot(pk, CN, O, OU, C):
 
 def get_root_crt(pk):
     base_dir = os.path.join(settings.CA_ROOT, 'stdroot', str(pk))
-    with open(os.path.join(base_dir, 'ca', 'root-ca.crt'), 'rb') as f:
+    with open(os.path.join(base_dir, 'ca', 'root-ca.crt'), 'r') as f:
         return f.read()
 
 
@@ -342,7 +342,7 @@ def gencrt_server(ca_pk, server_pk, csr):
     csr_file = os.path.join(
         base_dir, 'ca', 'certs', '%s.csr' % str(server_pk))
 
-    with open(csr_file, 'wb') as f:
+    with open(csr_file, 'w') as f:
         f.write(csr)
 
     crt_file = os.path.join(

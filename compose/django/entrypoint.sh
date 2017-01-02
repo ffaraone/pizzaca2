@@ -35,11 +35,10 @@ function elastic_ready(){
 python << END
 import sys
 import elasticsearch
-from urllib3.exceptions import ConnectionError
 try:
 	conn = elasticsearch.Elasticsearch('http://elastic:9200/')
 	conn.ping()
-except ConnectionError:
+except:
     sys.exit(-1)
 sys.exit(0)
 END

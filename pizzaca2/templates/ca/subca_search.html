@@ -5,105 +5,75 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-3">
-        <a  href="{% url 'ca:subca_create' %}" class="btn btn-large btn-primary" type="button">{% trans 'New intermediate' %}</a>
-    </div>
-    <div class="col-md-9">
-		<form role="form" method="GET" action="">
-			<div class="input-group">
-                <input type="text" class="form-control" placeholder="Search" id="search" name="q" value="{{ query }}">
-				<span class="input-group-btn">
-					<button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span></button>
-				</span>
-            </div>
-		</form>
-    </div>
+  <div class="col-md-3">
+      <a  href="{% url 'ca:subca_create' %}" class="btn btn-primary" role="button">{% trans 'New intermediate' %}</a>
+  </div>
+  <div class="col-md-9">
+    <form role="form" method="GET" action="">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search" id="search" name="q" value="{{ query }}">
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-secondary"><span class="fa fa-search"></span></button>
+        </span>
+
+      </div>
+    </form>
+  </div>
 </div>
+
+
 <div class="row">
 	<div class="col-md-12">
 	<p>&nbsp;</p>
 	</div>
 </div>
+
 {% for subca in objects_page %}
 <div class="row">
-	<div class="col-md-12">
-		{% if subca.status == 'new' %}
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title"><i class="glyphicon glyphicon-file"></i>
-				 {{ subca.CN }}</h3>
-  			</div>
-  			<div class="panel-body">
-    			<h4>{{ subca.CN }}</h4>
-    			{{ subca.OU }}<br/>
-    			{{ subca.kind }}<br/>
-    			<hr/>
-    			<div class="row">
-    				<div class="col-md-6"><strong>{{ subca.ca }}</strong></div>
-    				<div class="col-md-2"></div>
-		  			<div class="col-md-4">
-		  				<div class="pull-right">
-		  					<a href="#" type="button" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i> {% trans 'Delete' %}</a>
-		  					<a href="{% url 'ca:subca_operators' subca.pk %}" type="button" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-glyphicon-user"></i> {% trans 'Operators' %}</a>
-		  					<a href="{% url 'ca:subca_update' subca.pk %}" type="button" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-edit"></i> {% trans 'Edit' %}</a>
-		  					<a href="{% url 'ca:subca_generate' subca.pk %}" type="button" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-cog"></i> {% trans 'Generate' %}</a>
-		  				</div>
-		  			</div>
-		  		</div>
-  			</div>
-		</div>
-		{% elif subca.status == 'active' %}
-		<div class="panel panel-success">
-			<div class="panel-heading">
-				<h3 class="panel-title"><i class="glyphicon glyphicon-ok"></i>
-				 {{ subca.CN }}
-  			</div>
-  			<div class="panel-body">
-    			<h4>{{ subca.CN }}</h4>
-    			{{ subca.OU }}<br/>
-    			{{ subca.kind }}<br/>
-    			{% if subca.object.operators.all %}
-    			<h5>{% trans 'Operators' %}</h5>
-    			<ul>
-    			{% for op in subca.object.operators.all %}
-    				<li>{{ op.first_name }} {{ op.last_name }} ({{ op.email }})</li>
-    			{% endfor %}
-    			</ul>
-    			{% endif %}
-    			<hr/>
-    			<div class="row">
-    				<div class="col-md-8"><strong>{{ subca.ca }}</strong></div>
-		  			<div class="col-md-4">
-		  				<div class="pull-right">
-		  					<a href="{% url 'ca:subca_operators' subca.pk %}" type="button" class="btn btn-default btn-xs"><i class="glyphicon glyphicon-glyphicon-user"></i> {% trans 'Operators' %}</a>
-		  				</div>
-		  			</div>
-		  		</div>
-  			</div>
-		</div>
-		{% else %}
-		<div class="panel panel-danger">
-			<div class="panel-heading">
-				<h3 class="panel-title"><i class="glyphicon glyphicon-flag"></i>
-				 {{ subca.CN }}</h3>
-  			</div>
-  			<div class="panel-body">
-    			<h4>{{ subca.CN }}</h4>
-    			{{ subca.OU }}<br/>
-    			{{ subca.kind }}<br/>
-    			<hr/>
-    			<div class="row">
-    				<div class="col-md-6"><strong>{{ subca.ca }}</strong></div>
-    				<div class="col-md-2"></div>
-		  			<div class="col-md-4">
-		  				<div class="pull-right">
-		  				</div>
-		  			</div>
-		  		</div>
-  			</div>
-		</div>
-		{% endif %}
-	</div>
+  <div class="col-md-12">
+    {% if subca.status == 'new' %}
+    <div class="card card-outline-secondary">
+      <h3 class="card-header"><i class="fa fa-file-o"></i>
+         {{ subca.CN }}</h3>
+    {% elif subca.status == 'active' %}
+    <div class="card card-outline-success">
+      <h3 class="card-header"><i class="fa fa-check-circle-o"></i>
+         {{ subca.CN }}</h3>
+    {% else %}
+    <div class="card card-outline-danger">
+      <h3 class="card-header"><i class="fa fa-flag-o"></i>
+         {{ subca.CN }}</h3>
+    {% endif %}
+      <div class="card-block">
+        <p class="card-text">
+         {% trans 'Organization' %}: <strong>{{ subca.O }}</strong><br/>
+          {% trans 'Organizational unit' %}: <strong>{{ subca.OU }}</strong><br/>
+          {% trans 'Intermediate CA purpose' %}: <strong>{{ subca.kind }}</strong><br/>
+          {% trans 'Country' %}: <strong>{{ subca.country }}</strong><br/>
+          {% if subca.status == 'active' %}
+          <h5>{% trans 'Operators' %}</h5>
+          <ul>
+          {% for op in subca.object.operators.all %}
+            <li>{{ op.first_name }} {{ op.last_name }} ({{ op.email }})</li>
+          {% endfor %}
+          </ul>
+          {% endif %}
+        </p>
+
+        <div class="pull-right">
+          {% if subca.status == 'new' or subca.status == 'active' %}
+          <a href="{% url 'ca:subca_operators' subca.pk %}" role="button" class="btn btn-secondary btn-sm"><i class="fa fa-user"></i> {% trans 'Operators' %}</a>
+          {% endif %}
+          {% if subca.status == 'new' %}
+          <a href="#" role="button" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i> {% trans 'Delete' %}</a>
+
+          <a href="{% url 'ca:subca_update' subca.pk %}" role="button" class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i> {% trans 'Edit' %}</a>
+          <a href="{% url 'ca:subca_generate' subca.pk %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-cog"></i> {% trans 'Generate' %}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endfor %}
 {% include 'paginator.html' %}

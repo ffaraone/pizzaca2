@@ -135,7 +135,7 @@ def subca_search(request):
     if query:
         flt &= SQ(content=AutoQuery(query))
 
-    cas = SearchQuerySet().filter(flt).models(SubCA)
+    cas = SearchQuerySet().filter(flt).models(SubCA).order_by('-last_modified')
 
     paginator = Paginator(cas, 5)
 
@@ -207,7 +207,7 @@ def subca_operators(request, pk):
         'ca/subca_users.html',
         {
             'subca_id': ca.pk,
-            'subca_name': unicode(ca),
+            'subca_name': str(ca),
             'operators': operators,
             'selected_operators': selected_operators
         }

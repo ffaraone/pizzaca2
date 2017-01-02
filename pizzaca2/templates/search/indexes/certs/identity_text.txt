@@ -1,0 +1,12 @@
+{{ object.CN }}
+{{ object.T }}
+{{ object.GN }}
+{{ object.SN }}
+{{ object.O }}
+{{ object.OU }}
+{{ object.L }}
+{{ object.ST }}
+{{ object.get_C_display }}
+{{ object.get_status_display }}
+{{ object.serialNumber }}
+{{ object.E }}

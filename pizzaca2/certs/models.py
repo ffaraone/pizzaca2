@@ -137,6 +137,14 @@ class Server(models.Model):
         help_text=_('Issuer')
     )
 
+    last_modified = models.DateTimeField(
+        blank=True,
+        null=True,
+        auto_now=True,
+        verbose_name=_('Last modified'),
+        help_text=_('Last modified')
+    )
+
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -249,8 +257,8 @@ class Identity(models.Model):
     csr = models.TextField(
         null=True,
         blank=True,
-        verbose_name=_('Certificate format'),
-        help_text=_('Certificate format')
+        verbose_name=_('CSR'),
+        help_text=_('Certificate Signing Request')
     )
 
     not_before = models.DateTimeField(
@@ -281,6 +289,14 @@ class Identity(models.Model):
         choices=CRL_REASON_CHOICES,
         verbose_name=_('Reason'),
         help_text=_('Reason')
+    )
+
+    last_modified = models.DateTimeField(
+        blank=True,
+        null=True,
+        auto_now=True,
+        verbose_name=_('Last modified'),
+        help_text=_('Last modified')
     )
 
     status = models.CharField(

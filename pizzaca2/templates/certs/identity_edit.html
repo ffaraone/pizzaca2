@@ -8,11 +8,11 @@
 <div class="row">
 	<div class="col-md-12">
 		<form role="form" action="" method="POST">
-		{% csrf_token %}
+    {% csrf_token %}
     {{ f|crispy }}
 			<p>
-				<a href="{% url 'ca:ca_search' %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
-				<button name="guardar" value="guardar" type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
+				<a href="{% url 'certs:identity_search' %}" class="btn btn-secondary">{% trans 'Cancel' %}</a>
+				<button type="submit" class="btn btn-primary">{% trans 'Save' %}</button>
 			</p>
 		</form>
 	</div>

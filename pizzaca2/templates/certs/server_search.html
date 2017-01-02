@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load tz %}
+{% block title %}Pizza CA{% endblock %}
+
+{% block content %}
+{% include 'certs/revoke_modal.html' with action_url='certs:server_revoke' title='Revoke server certificate' %}
+{% include 'certs/delete_modal.html' with action_url='certs:server_delete' title='Delete server certificate' %}
+<div class="row">
+    <div class="col-md-3">
+      {% if perms.certs.add_server %}
+      <a  href="{% url 'certs:server_create' %}" class="btn btn-primary" role="button">{% trans 'New server' %}</a>
+      {% endif %}
+    </div>
+    <div class="col-md-9">
+    <form role="form" method="GET" action="">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search" id="search" name="q" value="{{ query }}">
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-secondary"><span class="fa fa-search"></span></button>
+        </span>
+
+      </div>
+    </form>
+    </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+  <p>&nbsp;</p>
+  </div>
+</div>
+{% for id in objects_page %}
+<div class="row">
+  <div class="col-md-12">
+    {% if id.status == 'new' %}
+    <div class="card card-outline-secondary">
+      <h3 class="card-header"><i class="fa fa-file-o"></i>
+         {{ id.CN }}</h3>
+    {% elif id.status == 'active' %}
+    <div class="card card-outline-success">
+      <h3 class="card-header"><i class="fa fa-check-circle-o"></i>
+         {{ id.CN }}</h3>
+    {% else %}
+    <div class="card card-outline-danger">
+      <h3 class="card-header"><i class="fa fa-flag-o"></i>
+         {{ id.CN }}</h3>
+    {% endif %}
+      <div class="card-block">
+        <p class="card-text">
+          {% trans 'Issuer' %}: <strong>{{ id.issuer }}</strong><br/>
+          {% trans 'Email' %}: <strong>{{ id.E|default_if_none:'' }}</strong><br/>
+          {% trans 'Organization' %}: <strong>{{ id.O }}</strong><br/>
+          {% if id.OU %}
+          {% trans 'Organizational unit' %}: <strong>{{ id.OU }}</strong><br/>
+          {% endif %}
+          {% trans 'Locality' %}: <strong>{{ id.L }}</strong><br/>
+          {% trans 'State or province' %}: <strong>{{ id.ST }}</strong><br/>
+          {% trans 'Country' %}: <strong>{{ id.country }}</strong><br/>
+          {% if id.status == 'active' %}
+          {% trans 'Not before' %}: <strong>{{ id.not_before|date:'l d F Y H:i:s' }}</strong><br/>
+          {% trans 'Not after' %}: <strong>{{ id.not_after|date:'l d F Y H:i:s' }}</strong><br/>
+          {% elif id.status == 'revoked' %}
+          {% trans 'Revoked on' %}: <strong>{{ id.revoked_on|date:'l d F Y H:i:s' }} ({{ id.crl_reason }})</strong><br/>
+          {% endif %}
+        </p>
+        {% if id.status == 'new' %}
+        <div class="pull-right">
+          {% if perms.certs.delete_server %}
+          <a href="#delete_modal" data-toggle="modal" role="button" class="btn btn-danger btn-sm" onclick="delete_object('{% trans 'server' %}', '{{ id.CN }}', {{ id.pk }});"><i class="fa fa-remove"></i> {% trans 'Delete' %}</a>
+          {% endif %}
+          {% if perms.certs.change_server %}
+          <a href="{% url 'certs:server_update' id.pk %}" role="button" class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i> {% trans 'Edit' %}</a>
+          {% endif %}
+          <a href="{% url 'certs:server_generate' id.pk %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-cog"></i> {% trans 'Generate' %}</a>
+        </div>
+        {% elif id.status == 'active' %}
+         <div class="pull-right">
+          <a href="#revoke_modal" data-toggle="modal" role="button" class="btn btn-danger btn-sm" onclick="$('#revoke_pk').val('{{ id.pk }}');"><i class="fa fa-flag"></i> {% trans 'Revoke' %}</a>
+          <a href="{% url 'certs:download_srv_pem' id.pk %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> {% trans 'Download' %}</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% include 'paginator.html' %}
+{% endblock %}

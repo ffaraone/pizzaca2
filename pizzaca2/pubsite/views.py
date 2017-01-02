@@ -1,4 +1,4 @@
-from io import StringIO
+from io import BytesIO
 from zipfile import ZipFile
 
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -15,7 +15,7 @@ from ..ca.models import CA
 
 def cas(request):
     page = request.GET.get('page', 1)
-    cas = CA.objects.filter(status = 'active')
+    cas = CA.objects.filter(status = 'active').order_by('-last_modified')
     paginator = Paginator(cas, 5)
     try:
         cas = paginator.page(page)
@@ -23,7 +23,7 @@ def cas(request):
         cas = paginator.page(1)
     except EmptyPage:
         cas = paginator.page(paginator.num_pages)
-    return render(request, 'acqua/cas.html', {'objects_page': cas})
+    return render(request, 'pubsite/cas.html', {'objects_page': cas})
 
 
 def servers(request, page=1):
@@ -49,7 +49,7 @@ def servers(request, page=1):
         srvs_list = paginator.page(paginator.num_pages)
     return render(
         request,
-        'acqua/servers.html',
+        'pubsite/servers.html',
         {
             'objects_page': srvs_list,
             'query': query
@@ -80,7 +80,7 @@ def identities(request):
         ids_list = paginator.page(paginator.num_pages)
     return render(
         request,
-        'acqua/identities.html',
+        'pubsite/identities.html',
         {
             'objects_page': ids_list,
             'query': query
@@ -88,7 +88,7 @@ def identities(request):
     )
 
 def bundle(request, pk):
-    stream = StringIO()
+    stream = BytesIO()
     bundle = []
     with ZipFile(stream, mode='w') as f:
         ca = get_object_or_404(CA, pk=pk)

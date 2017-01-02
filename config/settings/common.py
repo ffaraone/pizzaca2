@@ -48,7 +48,9 @@ LOCAL_APPS = (
     # custom users app
     'pizzaca2.users.apps.UsersConfig',
     'pizzaca2.ca.apps.CAConfig',
+    'pizzaca2.certs.apps.CertsConfig',
     'pizzaca2.pubsite.apps.PubSiteConfig',
+
     # Your stuff: custom apps go here
 )
 

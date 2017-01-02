@@ -19,3 +19,9 @@ Issues with the above approach:
 4. Undocumented: No mention in the documentation, or it's too hard for me to find
 */
 $('.form-group').removeClass('row');
+
+function delete_object(obj_type, obj_name, delete_pk) {
+	$('#obj_type').text(obj_type);
+	$('#obj_name').text(obj_name);
+	$('#delete_pk').val(delete_pk);
+}
