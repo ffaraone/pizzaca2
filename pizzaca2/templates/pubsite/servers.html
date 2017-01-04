@@ -1,70 +1,69 @@
-{% extends 'lievito/base.html' %}
+{% extends 'base.html' %}
 {% load staticfiles %}
 {% load i18n %}
 {% block title %}Pizza CA{% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-md-12">	
-		<form role="form" method="GET" action="">
-			<div class="input-group">                               
-                <input type="text" class="form-control" placeholder="Search" id="search" name="q" value="{{ query }}">
-				<span class="input-group-btn">
-					<button type="submit" class="btn"><span class="glyphicon glyphicon-search"></span></button>
-				</span>
-            </div>
-		</form>
-    </div>                  
-</div> 
+    <div class="col-md-12">
+      <form role="form" method="GET" action="">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search" id="search" name="q" value="{{ query }}">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-secondary"><span class="fa fa-search"></span></button>
+          </span>
+
+        </div>
+      </form>
+    </div>
+</div>
 <div class="row">
 	<div class="col-md-12">
 	<p>&nbsp;</p>
 	</div>
 </div>
-{% for srv in objects_page %}
+{% for id in objects_page %}
 <div class="row">
-	<div class="col-md-12">
-		<div class="panel {% if srv.status == 'active' %}panel-info{% else %}panel-danger{% endif %}">
-			<div class="panel-heading">
-				<h3 class="panel-title"><i class="glyphicon glyphicon-certificate"></i>
-				 {{ srv.CN }}
-  			</div>
-  			<div class="panel-body">
-  				<div class="subtitle">
-    				<h3>Subject</h3>
-    			</div>
-                <div class="data">
-                    Common name: <strong>{{ srv.CN }}</strong><br/>
-                    Organization: <strong>{{ srv.O }}</strong><br/>
-        			Organizational unit: <strong>{{ srv.OU }}</strong><br/>
-                    Locality name: <strong>{{ srv.L }}</strong><br/>
-                    State or Province name: <strong>{{ srv.ST }}</strong><br/>
-        			Country: <strong>{{ srv.country }}</strong><br/>
-                </div>
-                <div class="subtitle">
-                    <h3>Validity</h3>
-                </div>
-                <div class="data">
-                    Not before: <strong>{{ srv.not_before|date:'l d F Y H:i:s e' }}</strong><br/>
-                    Not after: <strong>{{ srv.not_after|date:'l d F Y H:i:s e' }}</strong><br/>
-                    {% if srv.status == 'revoked' %}
-                    Revoked on: <strong>{{ srv.revoked_on|date:'l d F Y H:i:s e' }}</strong><br/>
-                    {% endif %}
-                </div>
-    			<hr/>
-    			<div class="row">
-    				<div class="col-md-6"><strong>{{ id.issuer }}</strong></div>
-    				<div class="col-md-2"></div>
-		  			<div class="col-md-4">
-		  				<div class="pull-right">
-		  					<a href="{% url 'calzone.views.download_srv_pem' srv.pk %}" type="button" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-download"></i> {% trans 'Download' %}</a>
-		  				</div>
-		  			</div>
-		  		</div>
-  			</div>
-		</div>
-	</div>
+  <div class="col-md-12">
+    {% if id.status == 'new' %}
+    <div class="card card-outline-secondary">
+      <h3 class="card-header"><i class="fa fa-file-o"></i>
+         {{ id.CN }}</h3>
+    {% elif id.status == 'active' %}
+    <div class="card card-outline-success">
+      <h3 class="card-header"><i class="fa fa-check-circle-o"></i>
+         {{ id.CN }}</h3>
+    {% else %}
+    <div class="card card-outline-danger">
+      <h3 class="card-header"><i class="fa fa-flag-o"></i>
+         {{ id.CN }}</h3>
+    {% endif %}
+      <div class="card-block">
+        <p class="card-text">
+          {% trans 'Issuer' %}: <strong>{{ id.issuer }}</strong><br/>
+          {% trans 'Email' %}: <strong>{{ id.E|default_if_none:'' }}</strong><br/>
+          {% trans 'Organization' %}: <strong>{{ id.O }}</strong><br/>
+          {% if id.OU %}
+          {% trans 'Organizational unit' %}: <strong>{{ id.OU }}</strong><br/>
+          {% endif %}
+          {% trans 'Locality' %}: <strong>{{ id.L }}</strong><br/>
+          {% trans 'State or province' %}: <strong>{{ id.ST }}</strong><br/>
+          {% trans 'Country' %}: <strong>{{ id.country }}</strong><br/>
+          {% if id.status == 'active' %}
+          {% trans 'Not before' %}: <strong>{{ id.not_before|date:'l d F Y H:i:s' }}</strong><br/>
+          {% trans 'Not after' %}: <strong>{{ id.not_after|date:'l d F Y H:i:s' }}</strong><br/>
+          {% elif id.status == 'revoked' %}
+          {% trans 'Revoked on' %}: <strong>{{ id.revoked_on|date:'l d F Y H:i:s' }} - ({{ id.crl_reason }})</strong><br/>
+          {% endif %}
+        </p>
+        <div class="pull-right">
+          <a href="{% url 'certs:download_srv_pem' id.pk %}" role="button" class="btn btn-primary btn-sm"><i class="fa fa-cog"></i> {% trans 'Download' %}</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
-{% endfor %} 
-{% include 'lievito/paginator.html' %} 
+{% endfor %}
+{% include 'paginator.html' %}
 {% endblock %}

@@ -8,7 +8,7 @@ from django.template.defaultfilters import slugify
 from haystack.inputs import AutoQuery, Clean, Exact
 from haystack.query import SearchQuerySet, SQ
 
-#from calzone.models import Identity, Server
+from ..certs.models import Identity, Server
 from ..engine import openssl
 from ..ca.models import CA
 
@@ -30,13 +30,14 @@ def servers(request, page=1):
     srvs = None
     query = request.GET.get('q', '')
     page = request.GET.get('page', 1)
-    flt = SQ()
+    flt = SQ(status='active') | SQ(status='revoked')
 
     if query:
         flt &= SQ(content=AutoQuery(query))
 
 
-    srvs = SearchQuerySet().filter(flt).exclude(status='new').models(Server)
+    srvs = SearchQuerySet().filter(flt).models(Server) \
+        .order_by('-last_modified')
 
     paginator = Paginator(srvs, 5)
 
@@ -61,13 +62,14 @@ def identities(request):
     ids = None
     query = request.GET.get('q', '')
     page = request.GET.get('page', 1)
-    flt = SQ()
+    flt = SQ(status='active') | SQ(status='revoked')
 
     if query:
         flt &= SQ(content=AutoQuery(query))
 
 
-    ids = SearchQuerySet().filter(flt).exclude(status='new').models(Identity)
+    ids = SearchQuerySet().filter(flt).models(Identity) \
+        .order_by('-last_modified')
 
     paginator = Paginator(ids, 5)
 
