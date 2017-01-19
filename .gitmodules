@@ -1,0 +1,3 @@
+[submodule "rancher"]
+	path = rancher
+	url = ssh://git@miles.gescolabs.com/ran/pizzaca2.git
