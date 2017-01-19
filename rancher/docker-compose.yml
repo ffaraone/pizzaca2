@@ -1,0 +1,76 @@
+version: '2'
+
+volumes:
+  pizza_postgres_data:
+    external: true
+    driver: rancher-nfs
+  pizza_postgres_backup:
+    external: true
+    driver: rancher-nfs
+  pizza_elastic_data:
+    external: true
+    driver: rancher-nfs
+  pizza_ca_root_data:
+    external: true
+    driver: rancher-nfs
+
+services:
+  pizza-postgres:
+    image: pollo.gescocloud.com/pizzaca/pizza-postgres:1.0
+    volumes:
+      - pizza_postgres_data:/var/lib/postgresql/data
+      - pizza_postgres_backup:/backups
+    environment:
+      - POSTGRES_PASSWORD=med99xw9p
+      - POSTGRES_USER=pizzaca2
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: gesco.rancher.host.public=false
+
+  pizza-elastic:
+    image: elasticsearch:1.7
+    volumes:
+      - pizza_elastic_data:/usr/share/elasticsearch/data
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: gesco.rancher.host.public=false
+
+  pizza-django:
+    image: pollo.gescocloud.com/pizzaca/pizza-django:1.0
+    volumes:
+      - pizza_ca_root_data:/ca_root
+    user: django
+    depends_on:
+      - pizza-postgres
+      - pizza-redis
+      - pizza-elastic
+    command: /gunicorn.sh
+    environment:
+      - POSTGRES_PASSWORD=med99xw9p
+      - POSTGRES_USER=pizzaca2
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - DJANGO_SECRET_KEY=jq1masn#U88&%6bj&1m3@9_4@hv&ee+#fmpvshsyz8f^=w3(7=
+      - DJANGO_ALLOWED_HOSTS=.gescocloud.com
+      - DJANGO_MANDRILL_API_KEY=Ak9IIaLCdGh6BLQvUWi1dA
+      - DJANGO_SECURE_SSL_REDIRECT=False
+      - DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: gesco.rancher.host.public=false
+
+  pizza-nginx:
+    image: pollo.gescocloud.com/pizzaca/pizza-nginx:1.0
+    depends_on:
+      - pizza-django
+
+    ports:
+      - "0.0.0.0:8888:80"
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: gesco.rancher.host.public=false
+
+  pizza-redis:
+    image: redis:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label: gesco.rancher.host.public=false
