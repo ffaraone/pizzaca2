@@ -1,4 +1,5 @@
 FROM nginx:latest
-ADD nginx.conf /etc/nginx/nginx.conf
+ADD ./compose/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./staticfiles /www/static
 
 

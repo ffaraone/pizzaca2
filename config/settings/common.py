@@ -265,8 +265,8 @@ HAYSTACK_CONNECTIONS = {
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
-BASE_URL = 'http://conejo.gescocloud.com'
-CA_ROOT = '/app/ca_root'
+BASE_URL = 'https://pizza.gescocloud.com'
+CA_ROOT = '/ca_root'
 
 
 LOGGING = {

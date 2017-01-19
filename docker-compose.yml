@@ -1,37 +1,50 @@
 version: '2'
 
 volumes:
-  postgres_data: {}
-  postgres_backup: {}
+  pizza_postgres_data: {}
+  pizza_postgres_backup: {}
+  pizza_elastic_data: {}
+  pizza_ca_root_data: {}
 
 services:
-  postgres:
+  pizza-postgres:
     build: ./compose/postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - postgres_backup:/backups
+      - pizza_postgres_data:/var/lib/postgresql/data
+      - pizza_postgres_backup:/backups
     env_file: .env
 
-  django:
+  pizza-elastic:
+    image: elasticsearch:1.7
+    volumes:
+      - pizza_elastic_data:/usr/share/elasticsearch/data
+
+
+  pizza-django:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile
+    volumes:
+      - pizza_ca_root_data:/ca_root
     user: django
     depends_on:
-      - postgres
-      - redis
+      - pizza-postgres
+      - pizza-redis
+      - pizza-elastic
     command: /gunicorn.sh
     env_file: .env
 
-  nginx:
-    build: ./compose/nginx
+  pizza-nginx:
+    build:
+      context: .
+      dockerfile: ./compose/nginx/Dockerfile
     depends_on:
-      - django
+      - pizza-django
 
     ports:
-      - "0.0.0.0:80:80"
+      - "0.0.0.0:8888:80"
 
 
-  redis:
+  pizza-redis:
     image: redis:latest
 
