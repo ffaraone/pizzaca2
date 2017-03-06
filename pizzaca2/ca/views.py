@@ -113,12 +113,12 @@ def ca_generate(request, pk):
 def ca_get_resource(request, pk, res):
     if res[-3:] == 'crl':
         with open(os.path.join(settings.CA_ROOT, 'stdroot', str(pk), 'ca',
-                  'crl', res)) as f:
+                  'crl', res), 'rb') as f:
             data = f.read()
         return HttpResponse(data, content_type='application/pkix-crl')
     else:
         with open(os.path.join(settings.CA_ROOT, 'stdroot', str(pk), 'ca',
-                  res)) as f:
+                  res), 'r') as f:
             data = f.read()
         return HttpResponse(data, content_type='application/x-x509-ca-cert')
 
@@ -217,12 +217,12 @@ def subca_operators(request, pk):
 def subca_get_resource(request, pk, res):
     if res[-3:] == 'crl':
         with open(os.path.join(settings.CA_ROOT, 'stdsub', str(pk), 'ca',
-                  'crl', res)) as f:
+                  'crl', res), 'rb') as f:
             data = f.read()
         return HttpResponse(data, content_type='application/pkix-crl')
     else:
         with open(os.path.join(settings.CA_ROOT, 'stdsub', str(pk), 'ca',
-                  res)) as f:
+                  res), 'r') as f:
             data = f.read()
         return HttpResponse(data, content_type='application/x-x509-ca-cert')
 

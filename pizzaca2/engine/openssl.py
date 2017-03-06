@@ -118,7 +118,7 @@ def create_stdsub(pk, kind, rootpk, CN, O, OU, C):
 
     base_dir = os.path.join(settings.CA_ROOT, 'stdsub', str(pk))
     base_url = urljoin(settings.BASE_URL,
-                       'marinara/subca/resource/%s' % str(pk))
+                       'ca/subca/resource/%s' % str(pk))
 
     os.makedirs(os.path.join(base_dir, 'etc'))
     os.makedirs(os.path.join(base_dir, 'ca', '%s-ca' % kind, 'private'))
@@ -198,7 +198,7 @@ def get_sub_crt(pk):
 def create_stdroot(pk, CN, O, OU, C):
     base_dir = os.path.join(settings.CA_ROOT, 'stdroot', str(pk))
     base_url = urljoin(settings.BASE_URL,
-                       'openssl/ca/resource/%s' % str(pk))
+                       'ca/ca/resource/%s' % str(pk))
 
     os.makedirs(os.path.join(base_dir, 'etc'))
     os.makedirs(os.path.join(base_dir, 'ca', 'root-ca', 'private'))
