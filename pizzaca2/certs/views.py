@@ -126,7 +126,8 @@ def identity_generate(request, pk):
                     identity.ST,
                     identity.L,
                     identity.C,
-                    identity.serialNumber)
+                    identity.serialNumber,
+                    identity.related_company or '')
                 (not_before, not_after) = openssl.gencrt_identity(
                     identity.issuer.pk,
                     identity.pk)

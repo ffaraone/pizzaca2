@@ -240,6 +240,14 @@ class Identity(models.Model):
         help_text=_('Serial number')
     )
 
+    related_company = models.CharField(
+        max_length=255,
+        verbose_name=_('Related company ID'),
+        help_text=_('Related company ID'),
+        null=True,
+        blank=True
+    )
+
     issuer = models.ForeignKey(
         SubCA,
         verbose_name=_('Issuer'),

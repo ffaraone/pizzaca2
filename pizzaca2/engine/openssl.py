@@ -270,7 +270,7 @@ def get_root_crt(pk):
 
 
 def gencsr_identity(ca_pk, identity_pk, CN, T, GN, SN,
-                    E, O, OU, ST, L, C, serialNumber):
+                    E, O, OU, ST, L, C, serialNumber, related_company=''):
 
     base_dir = os.path.join(settings.CA_ROOT, 'stdsub', str(ca_pk))
     identity_conf = os.path.join(base_dir, 'etc', 'identity.conf')
@@ -285,8 +285,26 @@ def gencsr_identity(ca_pk, identity_pk, CN, T, GN, SN,
         subject += '/localityName=%s' % L
     if T:
         subject += '/title=%s' % T
+    if related_company:
+        subject += '/2.5.4.97=%s' % related_company
 
     subject += '/serialNumber=%s/emailAddress=%s' % (serialNumber, E)
+
+
+    params = [
+        OPENSSL,
+        'req',
+        '-new',
+        '-config', identity_conf,
+        '-out', os.path.join(
+            base_dir, 'ca', 'certs', '%s.csr' % str(identity_pk)),
+        '-keyout', os.path.join(
+            base_dir, 'ca', 'identity-ca',
+            'private', '%s.key' % str(identity_pk)),
+        '-subj', subject,
+        '-nodes'
+    ]
+    _run(params)
 
 
     params = [
